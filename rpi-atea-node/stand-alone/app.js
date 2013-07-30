@@ -11,7 +11,7 @@ var Atea = function(){
 	webapi.use(express.bodyParser())
 	wiegandReader = new WiegandReader();
 	
-	db = new Datastore({ filename: 'key.db', autoload: true });
+	db = new Datastore({ filename: '/home/pi/node-atea/stand-alone/key.db', autoload: true });
 	
     webapi.get('/', function(req, res){
 		res.send('Atea WebAPI');
@@ -20,38 +20,27 @@ var Atea = function(){
 	self.irekiAtea = function(){
 		cmdIrekiAtea = exec('ireki-atea');
 	}
-	self.isValidKey = function(key){
-	  output = false;
-	  self.db.findOne({key:key},function(err,doc){
-	  
-		if(!doc){
-			output =  false;
-		} else {
-		  console.log(doc);
-		  output =  true;
-		  return output;
-		}
-	  });
-	  return output;
-	 
-	}
 	self.gotKey = function(key){
 		if(DEBUG){
 			console.log("on.gotKey " + key);
 		}
-	
-		if(!self.isValidKey(key)){
-			if(DEBUG){
-				console.log("key: " + key + "FAIL");
-			}
-			
-		    
-		} else {
-			if(DEBUG){
-				console.log("key: " + key + "OK");
-			}
+		//We search for a document containing the key
+		db.findOne({key:key},function(err,doc){
+				
+			console.log(doc);
+			if(doc === null){
+				if(DEBUG){
+					console.log("key: " + key + "FAIL");
+				}
+			} else {
+				if(DEBUG){
+					console.log("key: " + key + "OK");
+					console.log(doc);
+				}
+			//Open the door
 			self.irekiAtea();
-		}
+			}
+	  });
 	}
 	
 	webapi.get('/ireki', function(req, res){
@@ -62,7 +51,7 @@ var Atea = function(){
 		res.send(200);
     });
 	self.webapi = webapi;
-	self.webapi.listen(5000);
+	self.webapi.listen(5001);
 	if(DEBUG){
 		console.log('Listening on port 5000');
 	}
@@ -70,6 +59,10 @@ var Atea = function(){
 	wiegandReader.on('gotKey',self.gotKey);
 	self.wiegandReader = wiegandReader;
 	self.db = db;
+	
+	//TODO: SOLO MIENTRAS NO TENGAMOS INDICADORES
+	//activamos el rele.
+	exec('ireki-atea');
 	return self;
 }
 

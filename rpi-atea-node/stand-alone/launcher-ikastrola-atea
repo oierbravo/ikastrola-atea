@@ -1,0 +1,29 @@
+#!/bin/sh
+#/etc/init.d/launcher-ikastrola-atea
+### BEGIN INIT INFO
+# Provides:          blabla
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: blabla
+# Description:
+#
+### END INIT INFO
+export PATH=$PATH:/usr/local/bin
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
+
+case "$1" in
+  start)
+  exec forever --sourceDir=/home/pi/node-atea/stand-alone -p /home/pi/forever app.js
+  ;;
+stop)
+  exec forever stop --sourceDir=/home/pi/node-atea/stand-alone app.js
+  ;;
+*)
+  echo "Usage: /etc/init.d/launcher-ikastrola-atea {start|stop}"
+  exit 1
+  ;;
+esac
+
+exit 0
