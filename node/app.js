@@ -7,7 +7,7 @@ var Datastore = require('nedb')
 var app = express();
 app.use(express.bodyParser());
 
-app.get('/arduino', function(req, res){
+app.get('/atea', function(req, res){
 console.log('arduino get');
 console.log(req.query.key);
 //res.send(200);

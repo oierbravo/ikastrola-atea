@@ -161,3 +161,8 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+## Ikastrola
+rpi-atea-cmd-utils/ikastrola-wiegand
+rpi-atea-cmd-utils/ireki-atea
+rpi-atea-node/node_module
